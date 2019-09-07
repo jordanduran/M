@@ -9,14 +9,14 @@ const app = express()
 
 const morganSetting = process.env.NODE_ENV === 'production' ? 'tiny' : 'common'
 app.use(morgan(morganSetting))
-app.use(helmet())
 app.use(cors())
+app.use(helmet())
 
 app.use(function(req, res, next) {
     const apiToken = process.env.API_TOKEN
-    const authToken = req.get('Authorization').split('')[1]
+    const authToken = req.get('Authorization')
     
-    if (authToken !== apiToken) {
+    if (!authToken || authToken.split(' ')[1] !== apiToken) {
         return res
             .status(401)
             .send(`Unauthorized Access`)
@@ -48,15 +48,15 @@ app.get('/movies', (req, res) => {
       res.json(result)
     })
 
-    app.use((error, req, res, next) => {
-      let response
-      if (process.env.NODE_ENV === 'production') {
-        response = { error: { message: 'server error' }}
-      } else {
-        response = { error }
-      }
-      res.status(500).json(response)
-    })
+    // app.use((error, req, res, next) => {
+    //   let response
+    //   if (process.env.NODE_ENV === 'production') {
+    //     response = { error: { message: 'server error' }}
+    //   } else {
+    //     response = { error }
+    //   }
+    //   res.status(500).json(response)
+    // })
     
     const PORT = process.env.PORT || 8000
 
