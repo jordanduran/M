@@ -11,11 +11,7 @@ app.use(morgan('dev'))
 app.use(helmet())
 app.use(cors())
 
-app.get('/movies',(req, res) => {
-  res.send(MOVIES);
-})
-
-app.use(function validateToken(req, res, next) {
+app.use(function(req, res, next) {
     const apiToken = process.env.API_TOKEN
     const authToken = req.get('Authorization')
     
@@ -26,8 +22,6 @@ app.use(function validateToken(req, res, next) {
     }
     next()
 })
-
-app.use(validateToken);
 
 app.get('/movies', (req, res) => {
     let result = MOVIES;
